@@ -5,8 +5,6 @@ import { useState, useEffect } from "react";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<{type: 'success', message: string} | null>(null);
 
   // Close mobile menu when scrolling
   useEffect(() => {
@@ -19,22 +17,6 @@ export default function Home() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isMenuOpen]);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setStatus(null);
-
-    // Simulate form submission
-    setTimeout(() => {
-      setStatus({
-        type: 'success',
-        message: 'Thank you for your message! I&apos;ll get back to you soon.'
-      });
-      setIsSubmitting(false);
-      e.currentTarget.reset();
-    }, 1000);
-  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -405,47 +387,41 @@ export default function Home() {
             </div>
             <div>
               <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Send a Message</h3>
-              <form className="space-y-4" onSubmit={handleSubmit}>
+              <div className="space-y-4">
                 <div>
                   <input
                     type="text"
-                    name="name"
                     placeholder="Your Name"
-                    required
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
                 <div>
                   <input
                     type="email"
-                    name="email"
                     placeholder="Your Email"
-                    required
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
                 <div>
                   <textarea
                     rows={4}
-                    name="message"
                     placeholder="Your Message"
-                    required
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
                   ></textarea>
                 </div>
-                {status && (
-                  <div className={`p-3 rounded-lg text-sm ${status.type === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'}`}>
-                    {status.message}
-                  </div>
-                )}
                 <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => {
+                    const message = encodeURIComponent("Hello! I found your portfolio and would like to connect.");
+                    window.open(`mailto:mukeshsahurkl1@gmail.com?subject=Contact from Portfolio&body=${message}`, '_blank');
+                  }}
+                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                  Send Message
                 </button>
-              </form>
+                <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                  Clicking &quot;Send Message&quot; will open your email client with a pre-filled message.
+                </p>
+              </div>
             </div>
           </div>
         </div>
