@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<{type: 'success' | 'error', message: string} | null>(null);
+  const [status, setStatus] = useState<{type: 'success', message: string} | null>(null);
 
   // Close mobile menu when scrolling
   useEffect(() => {
@@ -20,46 +20,20 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isMenuOpen]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setStatus(null);
 
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      message: formData.get('message'),
-    };
-
-    try {
-      // Using your own API route
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        setStatus({
-          type: 'success',
-          message: 'Thank you! Your message has been sent successfully.'
-        });
-        e.currentTarget.reset();
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to send message');
-      }
-    } catch {
+    // Simulate form submission
+    setTimeout(() => {
       setStatus({
-        type: 'error',
-        message: 'Sorry, there was an error sending your message. Please try again or contact me directly.'
+        type: 'success',
+        message: 'Thank you for your message! I&apos;ll get back to you soon.'
       });
-    } finally {
       setIsSubmitting(false);
-    }
+      e.currentTarget.reset();
+    }, 1000);
   };
 
   return (
